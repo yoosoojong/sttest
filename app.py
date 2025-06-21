@@ -1,8 +1,24 @@
 from openai import OpenAI
 import streamlit as st
 
+# 제목
 st.title("수종의 chatGPT")
 
+# 비밀번호 확인
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+# 비밀번호 입력 UI
+if not st.session_state.authenticated:
+    password = st.text_input("비밀번호를 입력하세요:", type="password")
+    if password and password == st.secrets.get("password"):
+        st.session_state.authenticated = True
+        st.experimental_rerun()
+    elif password:
+        st.error("비밀번호가 올바르지 않습니다.")
+    st.stop()
+
+# 인증 완료 후 실행되는 본 기능
 client = OpenAI()
 
 if "openai_model" not in st.session_state:
